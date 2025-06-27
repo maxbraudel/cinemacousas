@@ -1,3 +1,7 @@
+# Public Website
+
+[https://cinemacousas.braudelserveur.com](https://cinemacousas.braudelserveur.com)
+
 # 🛠️ Setup Instructions
 
 ## 📦 Install Python 3.12 (very important)
