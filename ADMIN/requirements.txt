@@ -1,0 +1,16 @@
+# Dépendances principales pour Cinemacousas
+# Framework web
+Flask==3.0.0
+
+# Support CORS pour l'API
+Flask-CORS==4.0.0
+
+# Connecteur base de données MySQL
+mysql-connector-python==8.2.0
+
+# Gestion des variables d'environnement
+python-dotenv==1.0.0
+
+# Note: Les dépendances suivantes sont installées automatiquement :
+# - Werkzeug, Jinja2, MarkupSafe, itsdangerous, click, blinker (avec Flask)
+# - protobuf (avec mysql-connector-python)

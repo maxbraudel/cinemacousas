@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Cinema Palace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/template-styles.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">Dashboard Admin</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if session.username %}
+                        <li class="nav-item">
+                            <span class="nav-link">Connecté : {{ session.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Déconnexion</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('login_form') }}">Connexion</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" id="admin-container">
+        <!-- Messages Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <!-- Gestion des Films -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gestion des Films</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/admin/movie" class="mb-3">
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="name" placeholder="Nom du film" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" name="duration" placeholder="Durée (min)" required>
+                                </div>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="director" placeholder="Réalisateur">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" name="cast" placeholder="Acteurs principaux">
+                                </div>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-md-10">
+                                    <textarea class="form-control" name="synopsis" placeholder="Synopsis" rows="2"></textarea>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-add w-100 h-100">Ajouter</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Durée</th>
+                                        <th>Réalisateur</th>
+                                        <th>Affiche</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if movies %}
+                                        {% for movie in movies %}
+                                        <tr>
+                                            <td>{{ movie.id }}</td>
+                                            <td>{{ movie.name }}</td>
+                                            <td>{{ movie.duration }} min</td>
+                                            <td>{{ movie.director or '-' }}</td>
+                                            <td>
+                                                <img src="{{ get_poster_url_with_cache_busting(movie.id) }}" 
+                                                     alt="Affiche" 
+                                                     class="poster-thumbnail"
+                                                     onerror="this.src='{{ url_for('static', filename='img/default-poster.svg') }}'; this.onerror=null;">
+                                            </td>
+                                            <td class="actions-inline">
+                                                <button type="button" class="btn btn-sm btn-info me-1" data-bs-toggle="modal" data-bs-target="#posterModal{{ movie.id }}" title="Gérer l'affiche">
+                                                    <span class="material-symbols-outlined">image</span>
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#editMovieModal{{ movie.id }}">
+                                                    <span class="material-symbols-outlined">edit</span>
+                                                </button>
+                                                <form method="POST" action="/admin/movie/{{ movie.id }}/delete" class="inline-form">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce film ?')">
+                                                        <span class="material-symbols-outlined">delete</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">Aucun film</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestion des Salles -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gestion des Salles</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/admin/room" class="mb-3">
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="name" placeholder="Nom de la salle" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" name="rows" placeholder="Rangées" min="1" max="20" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" name="columns" placeholder="Colonnes" min="1" max="20" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-add w-100">+</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Rangées</th>
+                                        <th>Colonnes</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if rooms %}
+                                        {% for room in rooms %}
+                                        <tr>
+                                            <td>{{ room.id }}</td>
+                                            <td>{{ room.name }}</td>
+                                            <td>{{ room.nb_rows }}</td>
+                                            <td>{{ room.nb_columns }}</td>
+                                            <td>{{ room.nb_rows * room.nb_columns }}</td>
+                                            <td class="actions-inline">
+                                                <button type="button" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#editRoomModal{{ room.id }}">
+                                                    <span class="material-symbols-outlined">edit</span>
+                                                </button>
+                                                <form method="POST" action="/admin/room/{{ room.id }}/delete" class="inline-form">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette salle ?')">
+                                                        <span class="material-symbols-outlined">delete</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">Aucune salle</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestion des Séances -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gestion des Séances</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/admin/showing" class="mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-2">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control" name="date" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Heure</label>
+                                    <input type="time" class="form-control" name="starttime" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Prix (€)</label>
+                                    <input type="number" step="0.01" class="form-control" name="baseprice" placeholder="12.50" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Salle</label>
+                                    <select class="form-select" name="room_id" required>
+                                        <option value="">Choisir...</option>
+                                        {% if rooms %}
+                                            {% for room in rooms %}
+                                            <option value="{{ room.id }}">{{ room.name }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Film</label>
+                                    <select class="form-select" name="movie_id" required>
+                                        <option value="">Choisir...</option>
+                                        {% if movies %}
+                                            {% for movie in movies %}
+                                            <option value="{{ movie.id }}">{{ movie.name }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <div class="col-md-1">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-add w-100">Ajouter</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Date</th>
+                                        <th>Heure</th>
+                                        <th>Film</th>
+                                        <th>Salle</th>
+                                        <th>Prix</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if showings %}
+                                        {% for showing in showings %}
+                                        <tr>
+                                            <td>{{ showing.id }}</td>
+                                            <td>{{ showing.date.strftime('%d/%m/%Y') if showing.date else '' }}</td>
+                                            <td>{{ showing.starttime }}</td>
+                                            <td>{{ showing.movie_name }}</td>
+                                            <td>{{ showing.room_name }}</td>
+                                            <td>{{ "%.2f"|format(showing.baseprice / 100) }}€</td>
+                                            <td class="actions-inline">
+                                                <button type="button" class="btn btn-sm btn-warning me-1" data-bs-toggle="modal" data-bs-target="#editShowingModal{{ showing.id }}">
+                                                    <span class="material-symbols-outlined">edit</span>
+                                                </button>
+                                                <form method="POST" action="/admin/showing/{{ showing.id }}/delete" class="inline-form">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette séance ?')">
+                                                        <span class="material-symbols-outlined">delete</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Aucune séance</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestion des Réservations -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Gestion des Réservations</h5>
+                        <span class="badge bg-primary">
+                            {% if bookings %}{{ bookings|length }}{% else %}0{% endif %} réservation(s)
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Utilisateur</th>
+                                        <th>Film</th>
+                                        <th>Séance</th>
+                                        <th>Places</th>
+                                        <th>Prix</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if bookings %}
+                                        {% for booking in bookings %}
+                                        <tr>
+                                            <td><strong>#{{ booking.booking_id }}</strong></td>
+                                            <td>
+                                                <div class="fw-bold">{{ booking.username }}</div>
+                                                <small class="text-muted">{{ booking.email }}</small>
+                                            </td>
+                                            <td>{{ booking.movie_name }}</td>
+                                            <td>
+                                                <div>{{ booking.date.strftime('%d/%m/%Y') }}</div>
+                                                <small class="text-muted">{{ booking.time }} - {{ booking.room_name }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">{{ booking.seat_count }} place(s)</span>
+                                                <div class="mt-1">
+                                                    {% for seat in booking.seats_list %}
+                                                        <span class="badge bg-light text-dark me-1">{{ seat }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <strong class="text-success">{{ "%.2f"|format(booking.price_euros) }}€</strong>
+                                            </td>
+                                            <td>
+                                                <form method="POST" action="/admin/booking/{{ booking.booking_id }}/cancel" class="inline-form">
+                                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                                            onclick="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ? Cette action est irréversible.')">
+                                                        <span class="material-symbols-outlined">delete</span>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Aucune réservation</td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {% if bookings %}
+                        <div class="mt-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 text-primary">{{ bookings|length }}</div>
+                                        <small class="text-muted">Réservations totales</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 text-success">{{ bookings|sum(attribute='seat_count') }}</div>
+                                        <small class="text-muted">Places réservées</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 text-info">{{ "%.0f"|format(bookings|sum(attribute='price_euros')) }}€</div>
+                                        <small class="text-muted">Chiffre d'affaires</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 text-warning">
+                                            {% set today_bookings = bookings|selectattr('date', 'eq', today)|list %}
+                                            {{ today_bookings|length if today_bookings else 0 }}
+                                        </div>
+                                        <small class="text-muted">Réservations aujourd'hui</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestion des Sièges -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gestion des Sièges</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="room-select" class="form-label">Sélectionner une salle :</label>
+                                <select id="room-select" class="form-select">
+                                    <option value="">Aucune sélection</option>
+                                    {% if rooms %}
+                                        {% for room in rooms %}
+                                        <option value="{{ room.id }}" data-rows="{{ room.nb_rows }}" data-columns="{{ room.nb_columns }}">
+                                            {{ room.name }} ({{ room.nb_rows }}x{{ room.nb_columns }})
+                                        </option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="seats-grid-container" class="seats-grid-container">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 id="selected-room-title" class="mb-0"></h6>
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <div class="legend-seat normal-legend me-2"></div>
+                                        <span>Normal</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="legend-seat pmr-legend me-2"></div>
+                                        <span>PMR</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="legend-seat stair-legend me-2"></div>
+                                        <span>Escalier</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="legend-seat empty-legend me-2"></div>
+                                        <span>Vide</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="seats-overflow">
+                                <div id="seats-grid" class="seats-admin-grid">
+                                    <!-- La grille sera générée dynamiquement -->
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-3">
+                                <div class="bg-dark text-white py-2 px-4 rounded">ÉCRAN</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+
+    <!-- Modales de modification -->
+    
+    <!-- Modales pour les films -->
+    {% if movies %}
+        {% for movie in movies %}
+        <div class="modal fade" id="editMovieModal{{ movie.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modifier le film: {{ movie.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form method="POST" action="/admin/movie/{{ movie.id }}/update">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Nom</label>
+                                <input type="text" class="form-control" name="name" value="{{ movie.name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Durée (minutes)</label>
+                                <input type="number" class="form-control" name="duration" value="{{ movie.duration }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Réalisateur</label>
+                                <input type="text" class="form-control" name="director" value="{{ movie.director or '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Acteurs principaux</label>
+                                <input type="text" class="form-control" name="cast" value="{{ movie.cast or '' }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Synopsis</label>
+                                <textarea class="form-control" name="synopsis" rows="3">{{ movie.synopsis or '' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Modales pour la gestion des affiches -->
+    {% if movies %}
+        {% for movie in movies %}
+        <div class="modal fade" id="posterModal{{ movie.id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Gérer l'affiche: {{ movie.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Affichage de l'affiche actuelle -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <h6>Affiche actuelle:</h6>
+                                <img src="{{ get_poster_url_with_cache_busting(movie.id) }}" 
+                                     alt="Affiche actuelle" 
+                                     class="img-fluid poster-preview border"
+                                     id="currentPoster{{ movie.id }}"
+                                     onerror="this.src='{{ url_for('static', filename='img/default-poster.svg') }}'; this.onerror=null;">
+                            </div>
+                            <div class="col-md-8">
+                                <!-- Upload nouvelle affiche -->
+                                <h6>Télécharger une nouvelle affiche:</h6>
+                                <form method="POST" action="/admin/movie/{{ movie.id }}/poster/upload" enctype="multipart/form-data">
+                                    <div class="mb-3">
+                                        <input type="file" class="form-control" name="poster" accept="image/*" required>
+                                        <div class="form-text">Formats acceptés: JPG, PNG, SVG (max 5MB)</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">
+                                        <span class="material-symbols-outlined">upload</span> Télécharger
+                                    </button>
+                                </form>
+                                
+                                <!-- Supprimer l'affiche -->
+                                <hr>
+                                <h6 class="text-danger">Zone de danger:</h6>
+                                <form method="POST" action="/admin/movie/{{ movie.id }}/poster/delete">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette affiche ?')">
+                                        <span class="material-symbols-outlined">delete</span> Supprimer l'affiche
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Modales pour les salles -->
+    {% if rooms %}
+        {% for room in rooms %}
+        <div class="modal fade" id="editRoomModal{{ room.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modifier la salle: {{ room.name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form method="POST" action="/admin/room/{{ room.id }}/update">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Nom</label>
+                                <input type="text" class="form-control" name="name" value="{{ room.name }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nombre de rangées</label>
+                                <input type="number" class="form-control" name="rows" value="{{ room.nb_rows }}" min="1" max="26" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nombre de colonnes</label>
+                                <input type="number" class="form-control" name="columns" value="{{ room.nb_columns }}" min="1" max="50" required>
+                            </div>
+                            <div class="alert alert-warning">
+                                <small><strong>Attention:</strong> Modifier les dimensions (rangées/colonnes) supprimera tous les sièges existants et les recréera. Cette opération n'est possible que si la salle n'est utilisée dans aucune séance.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Modales pour les séances -->
+    {% if showings %}
+        {% for showing in showings %}
+        <div class="modal fade" id="editShowingModal{{ showing.id }}" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modifier la séance: {{ showing.movie_name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form method="POST" action="/admin/showing/{{ showing.id }}/update">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Date</label>
+                                        <input type="date" class="form-control" name="date" value="{{ showing.date.strftime('%Y-%m-%d') if showing.date else '' }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Heure</label>
+                                        <input type="time" class="form-control" name="starttime" value="{{ showing.starttime }}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Prix (€)</label>
+                                <input type="number" step="0.01" class="form-control" name="baseprice" value="{{ "%.2f"|format(showing.baseprice / 100) }}" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Salle</label>
+                                        <select class="form-select" name="room_id" required>
+                                            {% if rooms %}
+                                                {% for room in rooms %}
+                                                <option value="{{ room.id }}" {% if room.id == showing.room_id %}selected{% endif %}>{{ room.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Film</label>
+                                        <select class="form-select" name="movie_id" required>
+                                            {% if movies %}
+                                                {% for movie in movies %}
+                                                <option value="{{ movie.id }}" {% if movie.id == showing.movie_id %}selected{% endif %}>{{ movie.name }}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+</body>
+</html>

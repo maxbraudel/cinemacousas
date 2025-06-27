@@ -1,0 +1,270 @@
+{% extends "booking_base.html" %}
+
+{% block title %}Booking Confirmation - Cinemacousas{% endblock %}
+
+{% block booking_progress %}
+<div class="d-flex align-items-center gap-2">
+  <span class="step completed">1. Seats</span>
+  <i class="fas fa-chevron-right"></i>
+  <span class="step completed">2. Info</span>
+  <i class="fas fa-chevron-right"></i>
+  <span class="step completed">3. Confirmation</span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div>
+
+  <div class="row booking-row">
+    <!-- Left Column - Movie Information -->
+    <div class="col-lg-4">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title mb-3 text-primary">
+            {{ booking.movie_name }}
+          </h3>
+          
+          <div class="movie-details">
+            <div class="mb-3">
+              <i class="fas fa-calendar text-primary me-2"></i>
+              <strong>Date</strong>
+              <div class="ms-4">{{ booking.date.strftime('%A, %B %d, %Y') }}</div>
+            </div>
+            
+            <div class="mb-3">
+              <i class="fas fa-clock text-primary me-2"></i>
+              <strong>Time</strong>
+              <div class="ms-4">{{ (booking.starttime|int / 3600)|int }}:{{ '%02d'|format(((booking.starttime|int % 3600) / 60)|int) }}</div>
+            </div>
+            
+            <div class="mb-3">
+              <i class="fas fa-door-open text-primary me-2"></i>
+              <strong>Room</strong>
+              <div class="ms-4">{{ booking.room_name }}</div>
+            </div>
+            
+            <div class="mb-3">
+              <i class="fas fa-stopwatch text-primary me-2"></i>
+              <strong>Duration</strong>
+              <div class="ms-4">{{ booking.duration }} minutes</div>
+            </div>
+          </div>
+
+          <!-- Booking Summary -->
+          <hr>
+          <div class="alert alert-info">
+            <h6 class="mb-2">
+              <i class="fas fa-ticket-alt me-2"></i>
+              Booking Summary:
+            </h6>
+            <div class="mb-2">
+              <strong>Total Price:</strong> €{{ "%.2f"|format(booking.price) }}
+            </div>
+            <div class="fw-bold">Tickets: {{ customers|length }}</div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-none d-print-block">
+            <small class="text-muted">Booking confirmation printed on {{ booking.date }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column - Tickets -->
+    <div class="col-lg-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <!-- Spectator Information -->
+          <div class="mb-4">
+            <h6 class="mb-3">
+              <i class="fas fa-users me-2"></i>
+              Spectator Information
+            </h6>
+            {% if customers %}
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Seat</th>
+                      <th>Name</th>
+                      <th>Age</th>
+                      <th>Special Needs</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for customer in customers %}
+                      <tr>
+                        <td>
+                          <span class="badge bg-primary">
+                            {{ customer.seat_row }}{{ customer.seat_column }}
+                          </span>
+                        </td>
+                        <td>{{ customer.firstname }} {{ customer.lastname }}</td>
+                        <td>{{ customer.age }} years</td>
+                        <td>
+                          {% if customer.pmr %}
+                            <span class="badge bg-warning">PMR</span>
+                          {% else %}
+                            <span class="text-muted">None</span>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <p class="text-muted">No spectator information available.</p>
+            {% endif %}
+          </div>
+
+          <!-- Important Information -->
+          <div class="alert alert-warning">
+            <h6 class="mb-2">
+              <i class="fas fa-info-circle me-2"></i>
+              Important Information
+            </h6>
+            <ul class="mb-0">
+              <li>Please arrive at the cinema at least 15 minutes before showtime.</li>
+              <li>Present this booking confirmation at the entrance.</li>
+              <li>Keep your booking ID (#{{ booking.id }}) for reference.</li>
+              <li>Seats are reserved and cannot be changed after booking.</li>
+              <li>For any issues, contact cinema support with your booking ID.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sticky Bottom Navigation -->
+<div class="sticky-bottom-nav">
+  <div class="sticky-nav-buttons">
+    <a href="{{ url_for('print_booking_tickets', booking_id=booking.id) }}" 
+       class="sticky-nav-btn btn-outline-secondary"
+       target="_blank"
+       onclick="printTickets(this.href); return false;"
+       title="Print professional PDF tickets">
+      <i class="fas fa-print me-2"></i>
+      Print Tickets
+    </a>
+    <a href="{{ url_for('download_booking_pdf', booking_id=booking.id) }}" class="sticky-nav-btn btn-success">
+      <i class="fas fa-download me-2"></i>
+      Download Tickets
+    </a>
+    <a href="{{ url_for('my_tickets') }}" class="sticky-nav-btn btn-primary">
+      <i class="fas fa-film me-2"></i>
+      Show All Tickets
+    </a>
+  </div>
+</div>
+
+<script>
+function printTickets(url) {
+  // Open PDF in new window
+  const printWindow = window.open(url, '_blank', 'width=800,height=600');
+  
+  // Wait for PDF to load, then trigger print
+  if (printWindow) {
+    printWindow.onload = function() {
+      setTimeout(function() {
+        printWindow.print();
+      }, 1000); // Give PDF time to render
+    };
+    
+    // Fallback: try to print after a delay even if onload doesn't fire
+    setTimeout(function() {
+      try {
+        printWindow.print();
+      } catch (e) {
+        console.log('Auto-print failed, user can manually print');
+      }
+    }, 2000);
+  }
+}
+</script>
+
+<style>
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 8px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.step-label {
+  font-size: 12px;
+  color: #6c757d;
+  text-align: center;
+}
+
+.progress-step.completed .step-circle {
+  background-color: #28a745;
+  border-color: #28a745;
+  color: white;
+}
+
+.progress-step.completed .step-label {
+  color: #28a745;
+}
+
+.progress-line {
+  width: 100px;
+  height: 2px;
+  background-color: #28a745;
+  margin: 0 20px;
+  margin-top: -28px;
+}
+
+@media print {
+  .btn, .progress-container {
+    display: none !important;
+  }
+  
+  .container {
+    max-width: 100% !important;
+  }
+  
+  .card {
+    border: 2px solid #000 !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .card-header {
+    background-color: #f8f9fa !important;
+    color: #000 !important;
+    border-bottom: 1px solid #000 !important;
+  }
+}
+</style>
+{% endblock %}

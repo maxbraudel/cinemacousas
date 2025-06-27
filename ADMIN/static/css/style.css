@@ -1,0 +1,252 @@
+/* Styles globaux pour l'application Cinema Palace */
+
+/* Variables CSS pour la cohérence des couleurs */
+:root {
+    --primary-color: #495057;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+/* Styles généraux */
+body {
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
+}
+
+.main-content {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Styles pour les cartes */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+/* Styles pour les tableaux */
+.table th {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Styles pour les icônes Material Symbols */
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.btn-warning .material-symbols-outlined {
+    color: white;
+}
+
+/* Styles pour les sièges (utilisés dans plusieurs pages) */
+.seat {
+    width: 35px;
+    height: 35px;
+    margin: 2px;
+    border: 2px solid #6c757d;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* Supprimer l'affichage des numéros */
+    font-size: 0;
+    color: transparent;
+}
+
+.seat:hover {
+    border-width: 3px;
+}
+
+.seat.normal {
+    background-image: url('../img/seat_available.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+}
+
+.seat.pmr {
+    background-image: url('../img/seat_pmr_available.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+}
+
+.seat.stair {
+    background-image: url('../img/stair.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: not-allowed;
+}
+
+.seat.empty {
+    background-image: url('../img/empty.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: not-allowed;
+}
+
+.seat.available {
+    background-image: url('../img/seat_available.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+}
+
+.seat.selected {
+    background-image: url('../img/seat_selected.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+}
+
+.seat.unavailable {
+    background-image: url('../img/seat_unavailable.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: not-allowed;
+}
+
+/* Styles spécifiques pour les sièges PMR dans différents états */
+.seat.pmr.selected {
+    background-image: url('../img/seat_pmr_selected.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+}
+
+.seat.pmr.unavailable {
+    background-image: url('../img/seat_pmr_unavailable.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    border: none;
+    cursor: not-allowed;
+}
+
+
+
+/* Effet hover pour les sièges avec images */
+.seat:hover:not(.unavailable) {
+    transform: scale(1.1);
+    z-index: 10;
+    position: relative;
+}
+
+/* Styles pour les grilles de sièges */
+.seats-grid {
+    display: inline-block;
+    border: 2px solid #dee2e6;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--light-color);
+}
+
+.seats-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.row-label {
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+/* Styles pour les boutons personnalisés */
+.btn-add {
+    background: linear-gradient(45deg, var(--success-color), #20c997);
+    border: none;
+    color: white;
+}
+
+.btn-add:hover {
+    background: linear-gradient(45deg, #218838, #1aa179);
+    color: white;
+}
+
+/* Styles pour les en-têtes de colonnes */
+.column-header {
+    width: 35px;
+    height: 25px;
+    margin: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--primary-color);
+    background-color: transparent;
+}
+
+.column-headers-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.column-headers-spacer {
+    width: 30px;
+    margin-right: 10px;
+}
+
+/* Styles responsives */
+@media (max-width: 768px) {
+    .seats-overflow {
+        max-height: 300px;
+    }
+    
+    .seat {
+        width: 30px;
+        height: 30px;
+        font-size: 9px;
+    }
+    
+    .row-label {
+        width: 25px;
+        margin-right: 5px;
+    }
+}

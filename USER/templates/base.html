@@ -1,0 +1,153 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Movie Landing Page{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/reset.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}">
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <main>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% if request.endpoint in ['login', 'signup'] %}
+              <!-- For login/signup pages: Only show non-form messages as toasts -->
+              {% set form_categories = ['error', 'form_error'] %}
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  {% for category, message in messages %}
+                    {% if category not in form_categories %}
+                      Toastify({
+                        text: "{{ message }}",
+                        duration: 4000,
+                        close: true,
+                        gravity: "bottom",
+                        position: "right",
+                        stopOnFocus: true,
+                        style: {
+                          background: {% if category == 'success' %}"linear-gradient(to right, #00b09b, #96c93d)"{% elif category == 'info' %}"linear-gradient(to right, #667eea, #764ba2)"{% else %}"linear-gradient(to right, #11998e, #38ef7d)"{% endif %}
+                        },
+                        onClick: function(){} // Callback after click
+                      }).showToast();
+                    {% endif %}
+                  {% endfor %}
+                });
+              </script>
+            {% else %}
+              <!-- Toast Messages for all other pages -->
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  {% for category, message in messages %}
+                    Toastify({
+                      text: "{{ message }}",
+                      duration: 4000,
+                      close: true,
+                      gravity: "bottom",
+                      position: "right",
+                      stopOnFocus: true,
+                      style: {
+                        background: {% if category == 'success' %}"linear-gradient(to right, #00b09b, #96c93d)"{% elif category == 'error' or category == 'form_error' %}"linear-gradient(to right, #ff5f6d, #ffc371)"{% elif category == 'info' %}"linear-gradient(to right, #667eea, #764ba2)"{% else %}"linear-gradient(to right, #11998e, #38ef7d)"{% endif %}
+                      },
+                      onClick: function(){} // Callback after click
+                    }).showToast();
+                  {% endfor %}
+                });
+              </script>
+            {% endif %}
+          {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    {% if storeUrl == True %}
+    <script>
+        console.log("Storing previous URL in localStorage");
+        localStorage.setItem('previousUrl', window.location.href);
+    </script>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <script>
+        // Custom toast function for easy use
+        function showToast(message, type = 'success') {
+            const colors = {
+                success: "linear-gradient(to right, #00b09b, #96c93d)",
+                error: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                info: "linear-gradient(to right, #667eea, #764ba2)",
+                warning: "linear-gradient(to right, #f093fb, #f5576c)"
+            };
+            
+            Toastify({
+                text: message,
+                duration: 4000,
+                close: true,
+                gravity: "top",
+                position: "bottom",
+                stopOnFocus: true,
+                style: {
+                    background: colors[type] || colors.success
+                },
+                onClick: function(){}
+            }).showToast();
+        }
+    </script>
+    
+    <!-- Footer -->
+    <footer class="custom-footer-gradient text-center text-muted py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <h5 class="text-primary">Cinemacousas</h5>
+                    <p class="mb-2">Your premier destination for movie experiences</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('index') }}" class="text-muted text-decoration-none">Home</a></li>
+                        <li><a href="{{ url_for('movies') }}" class="text-muted text-decoration-none">Movies</a></li>
+                        {% if session.logged_in %}
+                        <li><a href="{{ url_for('profile') }}" class="text-muted text-decoration-none">My Profile</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold">Contact</h6>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>info@cinemacousas.com</p>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold">Follow Us</h6>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="row">
+                <div class="col-12">
+                    <p class="mb-0">&copy; 2025 Cinemacousas. All rights reserved.</p>
+                    <small class="text-muted">Made with <i class="fas fa-heart text-danger"></i> for movie lovers</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

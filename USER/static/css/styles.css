@@ -1,0 +1,1335 @@
+/* 
+ * Cinemacousas - Global Stylesheet
+ * This file contains all unified styles for the movie website
+ */
+
+/* ================================
+   CSS CUSTOM PROPERTIES (VARIABLES)
+   ================================ */
+:root {
+  /* Colors */
+  --primary-color: #0d6efd;
+  --primary-hover: #0b5ed7;
+  --secondary-color: #6c757d;
+  --success-color: #198754;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --info-color: #0dcaf0;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --white: #ffffff;
+  
+  /* Text Colors */
+  --text-primary: #333333;
+  --text-secondary: #6c757d;
+  --text-muted: #6c757d;
+  
+  /* Backgrounds */
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --bg-dark: #212529;
+  
+  /* Shadows */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  
+  /* Spacing */
+  --navbar-height: 4rem;
+  --border-radius: 0.375rem;
+  --border-radius-lg: 0.5rem;
+  
+  /* Transitions */
+  --transition: all 0.3s ease;
+  --transition-fast: all 0.15s ease;
+}
+
+/* ================================
+   GLOBAL STYLES
+   ================================ */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--bg-white);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ================================
+   NAVIGATION STYLES
+   ================================ */
+.navbar {
+  height: var(--navbar-height);
+  width: 100vw;
+  background-color: var(--bg-white) !important;
+  transition: var(--transition);
+}
+
+.custom-navbar-gradient {
+  background: linear-gradient(to bottom, rgba(158, 158, 158, 0), #f9f9f9); /* transparent to grey */
+}
+
+.custom-footer-gradient {
+  background: linear-gradient(to top, rgba(158, 158, 158, 0), #f9f9f9); /* transparent to grey */
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: var(--primary-color) !important;
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+.navbar-brand:hover {
+  color: var(--primary-hover) !important;
+}
+
+.navbar-brand h4 {
+  margin-bottom: 0;
+  font-weight: bold;
+  color: var(--primary-color);
+  transition: var(--transition-fast);
+  font-size: 1.3rem; /* Consistent 1rem size across all templates */
+}
+
+.navbar-brand:hover h4 {
+  color: var(--primary-hover);
+}
+
+.navbar-brand i {
+  font-size: 1.25rem;
+}
+
+.navbar-nav {
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-link {
+  color: var(--text-primary) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--border-radius);
+  transition: var(--transition-fast);
+  outline: none !important;
+}
+
+.nav-link:hover {
+  opacity: 0.7;
+}
+
+/* User dropdown styles */
+.dropdown-menu {
+  border: none;
+  box-shadow: var(--shadow);
+  border-radius: var(--border-radius-lg);
+  min-width: 200px;
+}
+
+.dropdown-header {
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  transition: var(--transition-fast);
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-light);
+  color: var(--primary-color);
+}
+
+/* Profile image styles */
+.profile-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 2px solid var(--bg-light);
+  transition: var(--transition-fast);
+}
+
+/* Profile button container */
+#userDropdown {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: var(--transition-fast);
+}
+
+#userDropdown:hover {
+  background-color: var(--bg-light) !important;
+}
+
+/* ================================
+   HERO SECTION STYLES
+   ================================ */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: calc(100vh - 2 * var(--navbar-height));
+  position: relative;
+}
+
+h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 1s ease-out;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================
+   FORM STYLES
+   ================================ */
+.log-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(80vh);
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 90vw;
+  max-width: 300px;
+}
+
+/* Enhanced form controls */
+.form-control {
+  border: 2px solid #e9ecef;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control-plaintext {
+    padding: 0.75rem 1rem !important;
+    border: 2px solid #ffffff;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+/* ================================
+   FORM VALIDATION STYLES
+   ================================ */
+.form-control.is-invalid {
+  border-color: var(--danger-color);
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-control.is-valid {
+  border-color: var(--success-color);
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+.form-text {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.form-check-label {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+/* ================================
+   CARD STYLES
+   ================================ */
+.card {
+  border: none;
+  border-radius: 1rem;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Login page specific card styling */
+.login-card {
+  box-shadow: var(--shadow-lg);
+}
+
+.login-card .card-body {
+  padding: 2rem;
+}
+
+.card-title {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* Movie card specific styles */
+.movie-card {
+  height: 100%;
+  border: 1px solid #dee2e6;
+}
+
+
+/* ================================
+   BUTTON STYLES
+   ================================ */
+.btn {
+  border-radius: 0.75rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, #0a58ca 100%);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: var(--white);
+}
+
+.btn-outline-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: var(--white);
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: var(--white);
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* ================================
+   BADGE STYLES
+   ================================ */
+.badge {
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.badge.bg-secondary {
+  background-color: var(--secondary-color) !important;
+}
+
+/* ================================
+   ALERT STYLES
+   ================================ */
+.alert {
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: var(--success-color);
+  border-left: 4px solid var(--success-color);
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--danger-color);
+  border-left: 4px solid var(--danger-color);
+}
+
+.alert-info {
+  background-color: rgba(13, 202, 240, 0.1);
+  color: var(--info-color);
+  border-left: 4px solid var(--info-color);
+}
+
+/* ================================
+   UTILITY CLASSES
+   ================================ */
+.text-primary {
+  color: #2c3e50 !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.bg-light {
+  background-color: var(--bg-light) !important;
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.shadow {
+  box-shadow: var(--shadow) !important;
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* ================================
+   ICON STYLES
+   ================================ */
+.fa-user-circle {
+  color: var(--secondary-color);
+}
+
+/* Login form specific icons */
+.login-icon {
+  color: var(--secondary-color);
+  transition: var(--transition-fast);
+}
+
+.login-icon:hover {
+  color: var(--primary-color);
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .navbar-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .nav-center {
+    position: static;
+    transform: none;
+  }
+  
+  .container {
+    padding: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-control {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  /* Login form responsive adjustments */
+  .login-card .card-body {
+    padding: 2rem 1.5rem !important;
+  }
+}
+
+/* ================================
+   ANIMATIONS AND EFFECTS
+   ================================ */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+/* ================================
+   LOADING STATES
+   ================================ */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--bg-light);
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  padding: 2rem;
+}
+
+.centered-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  padding: 2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ================================
+   FOCUS ACCESSIBILITY
+   ================================ */
+*:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.form-control:focus{
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* ================================
+   PRINT STYLES
+   ================================ */
+@media print {
+  /* Hide navigation and UI elements when printing */
+  .navbar,
+  .nav,
+  .dropdown,
+  .dropdown-menu,
+  .toast,
+  .alert:not(.alert-info), /* Keep ticket info alerts when printing */
+  .btn:not(.btn-print), /* Allow print buttons if they exist */
+  .back-link,
+  .breadcrumb,
+  .footer,
+  .sidebar {
+    display: none !important;
+  }
+  
+  /* Ensure clean print layout */
+  body {
+    color: black !important;
+    background: white !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0.5in !important;
+  }
+  
+  /* Clean up cards for printing */
+  .card {
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+    margin-bottom: 1rem !important;
+    page-break-inside: avoid !important;
+  }
+  
+  .card-header {
+    background: white !important;
+    border-bottom: 1px solid #333 !important;
+  }
+  
+  /* Ensure ticket information is clearly visible */
+  .ticket-card {
+    border: 2px solid #333 !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Hide decorative elements */
+  .badge,
+  .spinner-border,
+  .btn-close {
+    display: none !important;
+  }
+  
+  /* Ensure text is readable */
+  h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+    page-break-after: avoid !important;
+  }
+  
+  /* Prevent page breaks within important elements */
+  .movie-info,
+  .showing-info,
+  .seat-info {
+    page-break-inside: avoid !important;
+  }
+}
+
+/* ================================
+   MULTI-STEP FORM STYLES
+   ================================ */
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 2rem 0;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bg-light);
+  border: 2px solid var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--secondary-color);
+  transition: var(--transition);
+}
+
+.step-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.progress-step.active .step-number {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.progress-step.active .step-label {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.progress-step.completed .step-number {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+  color: var(--white);
+}
+
+.progress-step.completed .step-label {
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.progress-line {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background-color: var(--bg-light);
+  transition: var(--transition);
+  z-index: 1;
+}
+
+.progress-line.completed {
+  background-color: var(--success-color);
+}
+
+.signup-step {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================
+   DATE SELECTOR STYLES
+   ================================ */
+.date-selector-container {
+  margin-bottom: 1.5rem;
+}
+
+.date-selector {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--bg-light);
+}
+
+.date-selector::-webkit-scrollbar {
+  height: 6px;
+}
+
+.date-selector::-webkit-scrollbar-track {
+  background: var(--bg-light);
+  border-radius: 3px;
+}
+
+.date-selector::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 3px;
+}
+
+.date-selector::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+.date-btn {
+  min-width: 70px;
+  padding: 0.75rem 0.5rem;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--border-radius-lg);
+  background: transparent;
+  transition: var(--transition-fast);
+}
+
+.date-btn:hover {
+  background: var(--primary-color);
+}
+
+.date-btn.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.date-btn .small {
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.date-btn .fw-bold {
+  font-size: 1.1rem;
+  margin: 0.25rem 0;
+}
+
+/* ================================
+   DATE CAROUSEL STYLES
+   ================================ */
+.date-carousel-container {
+  position: relative;
+  padding: 0 60px;
+  margin-bottom: 2rem;
+  height: 70px;
+}
+
+.date-carousel {
+  overflow: hidden;
+  margin: 0px 8px;
+  height: 100%;
+  position: relative;
+}
+
+/* Gradient overlays for smooth fade effect */
+.date-carousel::before,
+.date-carousel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.date-carousel::before {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.date-carousel::after {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.date-carousel-track {
+  transition: transform 0.3s ease;
+  display: flex;
+  gap: 8px;
+  height: 100%;
+}
+
+.carousel-nav-btn {
+  transition: all 0.2s ease;
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius-lg);
+  background-color: #ffffff;
+  height: 100%;
+  width: 60px;
+}
+
+
+.carousel-nav-btn:hover:not(:disabled) {
+  background-color: #e7f3ff !important;
+  border-color: var(--primary-color) !important;
+  transform: scale(1.05);
+  color: #495057 !important;
+}
+
+.carousel-nav-btn:disabled {
+  opacity: 0.5;
+  transform: none;
+  cursor: default !important
+}
+
+.date-btn {
+  transition: all 0.2s ease;
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius-lg);
+  background-color: #ffffff;
+  min-width: 120px;
+}
+
+.date-btn:hover {
+  border-color: #0d6efd;
+  background-color: #e7f3ff;
+}
+
+.date-btn.active {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: white !important;
+}
+
+.date-btn.active:hover {
+  background-color: #0b5ed7 !important;
+  border-color: #0b5ed7 !important;
+}
+
+/* Calendar picker styles */
+#calendarPicker {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+
+/* ================================
+   BOOKING PAGES STYLES
+   ================================ */
+
+/* Booking page layout */
+.booking-page {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Booking pages use the same navbar as main site now */
+
+.booking-row {
+  min-height: calc(100vh - var(--navbar-height) - 10rem);
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 100vw; /* Ensure it doesn't exceed viewport width */
+  width: 100%; /* Take full available width */
+}
+
+/* Additional booking layout fixes */
+.booking-row > .col-lg-4,
+.booking-row > .col-lg-8 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  max-width: 100%;
+}
+
+/* Ensure cards don't overflow */
+.booking-row .card {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix any potential overflow from seat grid */
+.movie-theater {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* Booking progress indicator */
+.booking-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.booking-progress .step {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+.booking-progress .step.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.booking-progress .step.completed {
+  background-color: #198754;
+  color: white;
+}
+
+/* Clean container for booking */
+.booking-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Ensure booking page navbar brand has same size as main site */
+.booking-page .navbar-brand h4 {
+  font-size: 1.3rem; /* Same as main navbar */
+}
+
+/* Responsive adjustments for booking pages */
+@media (max-width: 768px) {
+  .booking-page .navbar-brand h4 {
+    font-size: 0.9rem; /* Proportionally smaller on mobile */
+  }
+  
+  .booking-progress {
+    display: none; /* Hide progress on mobile to save space */
+  }
+  
+  .booking-container {
+    padding: 0.5rem;
+  }
+}
+
+/* ================================
+   STICKY BOTTOM NAVIGATION
+   ================================ */
+
+/* Add padding bottom to booking pages to make room for sticky buttons */
+.booking-page {
+  padding-bottom: 80px; /* Space for sticky buttons */
+}
+
+/* Sticky bottom navigation container */
+.sticky-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: white;
+  border-top: 1px solid #dee2e6;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  padding: 1rem;
+}
+
+/* Button container that handles the layout */
+.sticky-nav-buttons {
+  display: flex;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Individual sticky buttons */
+.sticky-nav-btn {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  outline: none !important;
+}
+
+/* Single button takes full width */
+.sticky-nav-buttons .sticky-nav-btn:only-child {
+  flex: 1;
+}
+
+/* Two buttons share 50/50 */
+.sticky-nav-buttons .sticky-nav-btn:first-child:not(:only-child),
+.sticky-nav-buttons .sticky-nav-btn:last-child:not(:only-child) {
+  flex: 1;
+}
+
+/* Primary button styles */
+.sticky-nav-btn.btn-primary {
+  background-color: #0d6efd;
+  border: 2px solid #0d6efd;
+  color: white;
+}
+
+.sticky-nav-btn.btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0b5ed7;
+  color: white;
+}
+
+/* Secondary button styles */
+.sticky-nav-btn.btn-outline-secondary {
+  background-color: white;
+  border: 2px solid #6c757d;
+  color: #6c757d;
+}
+
+.sticky-nav-btn.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+
+/* Success button styles */
+.sticky-nav-btn.btn-success {
+  background-color: #198754;
+  border: 2px solid #198754;
+  color: white;
+}
+
+.sticky-nav-btn.btn-success:hover {
+  background-color: #157347;
+  border-color: #157347;
+  color: white;
+}
+
+/* Responsive adjustments for sticky buttons */
+@media (max-width: 768px) {
+  .sticky-bottom-nav {
+    padding: 0.75rem;
+  }
+  
+  .sticky-nav-buttons {
+    gap: 0.5rem;
+  }
+  
+  .sticky-nav-btn {
+    padding: 0.875rem;
+    font-size: 1rem;
+    min-height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sticky-bottom-nav {
+    padding: 0.5rem;
+  }
+  
+  .sticky-nav-btn {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    min-height: 42px;
+  }
+}
+
+/* ================================
+   SEAT GRID STYLES
+   ================================ */
+
+/* Theater container */
+.movie-theater {
+  width: min-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Seat grid container */
+.seats-grid {
+  display: inline-block;
+  border-radius: 8px;
+}
+
+/* Row of seats */
+.seats-row {
+  display: flex;
+  margin-bottom: 5px;
+  gap: 7px;
+}
+
+/* Individual seat element */
+.seat {
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* ================================
+   SEAT TYPES - AVAILABLE STATES
+   ================================ */
+
+/* Normal available seat */
+.seat.normal {
+  background-image: url('/static/images/seat_types/seat_available.svg');
+}
+
+/* PMR available seat */
+.seat.pmr {
+  background-image: url('/static/images/seat_types/seat_pmr_available.svg');
+}
+
+/* Empty space (no seat) */
+.seat.empty {
+  background-image: url('/static/images/seat_types/empty.svg');
+  cursor: default;
+}
+
+/* Stair/aisle space */
+.seat.stair {
+  background-image: url('/static/images/seat_types/stair.svg');
+  cursor: default;
+}
+
+/* ================================
+   SEAT STATES - OCCUPIED
+   ================================ */
+
+/* Normal occupied seat */
+.seat.normal.occupied {
+  background-image: url('/static/images/seat_types/seat_unavailable.svg');
+  cursor: not-allowed;
+}
+
+/* PMR occupied seat */
+.seat.pmr.occupied {
+  background-image: url('/static/images/seat_types/seat_pmr_unavailable.svg');
+  cursor: not-allowed;
+}
+
+/* ================================
+   SEAT STATES - SELECTED
+   ================================ */
+
+/* Normal selected seat */
+.seat.normal.selected {
+  background-image: url('/static/images/seat_types/seat_selected.svg');
+}
+
+/* PMR selected seat */
+.seat.pmr.selected {
+  background-image: url('/static/images/seat_types/seat_pmr_selected.svg');
+}
+
+/* ================================
+   SEAT INTERACTIONS
+   ================================ */
+
+/* Hover effects for selectable seats */
+.seat.normal:not(.occupied):not(.selected):hover,
+.seat.pmr:not(.occupied):not(.selected):hover {
+  opacity: 0.7;
+}
+
+/* ================================
+   SEAT LEGEND
+   ================================ */
+
+.seat-legend-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* ================================
+   TICKET PAGES STYLES
+   ================================ */
+
+/* Booking card styles */
+.booking-card {
+  border-left: 4px solid #007bff;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.booking-card:hover {
+  background-color: var(--bs-light);
+}
+
+.showing-info {
+  padding-left: 20px;
+  border-left: 2px solid #e9ecef;
+}
+
+.booking-details {
+  text-align: right;
+}
+
+/* Clickable booking card styles */
+.clickable-booking {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clickable-booking:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Empty state for tickets pages */
+.empty-state {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Ticket page specific styling */
+.booking-card .badge {
+  font-size: 12px;
+}
+
+.booking-card .card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.booking-card .btn-sm {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+/* Responsive styles for ticket pages */
+@media (max-width: 768px) {
+  .booking-details {
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .showing-info {
+    padding-left: 0;
+    border-left: none;
+    border-top: 2px solid #e9ecef;
+    padding-top: 15px;
+    margin-top: 15px;
+  }
+}
